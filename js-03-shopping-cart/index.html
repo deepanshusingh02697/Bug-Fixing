@@ -1,38 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shopping Cart</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="app">
-    <header>
-      <h1>ShopJS</h1>
-      <div class="cart-icon" onclick="toggleCart()">
-        🛒 Cart (<span id="cartCount">0</span>)
-      </div>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>ShopJS</h1>
+        <div class="cart-icon" onclick="toggleCart()">
+          🛒 Cart (<span id="cartCount">0</span>)
+        </div>
+      </header>
 
-    <main>
-      <div class="product-grid" id="productGrid"></div>
-    </main>
+      <main>
+        <div class="product-grid" id="productGrid"></div>
+      </main>
 
-    <div id="cartSidebar" class="cart-sidebar hidden">
-      <h2>Your Cart</h2>
-      <div id="cartItems"></div>
-      <div class="cart-summary">
-        <p>Subtotal: $<span id="subtotal">0.00</span></p>
-        <p>Discount (10%): -$<span id="discount">0.00</span></p>
-        <p><strong>Total: $<span id="total">0.00</span></strong></p>
-        <input type="text" id="couponInput" placeholder="Enter coupon code..." />
-        <button onclick="applyCoupon()">Apply Coupon</button>
-        <p id="couponMsg"></p>
-        <button class="checkout-btn" onclick="checkout()">Checkout</button>
+      <div id="cartSidebar" class="cart-sidebar hidden">
+        <div class="toggleHeading">
+          <h2>Your Cart</h2>
+          <div onclick="toggleCart()" class="crossIcon">X</div>
+        </div>
+        <div id="cartItems"></div>
+        <div class="cart-summary">
+          <p>Subtotal: $<span id="subtotal">0.00</span></p>
+          <p>Discount (10%): -$<span id="discount">0.00</span></p>
+          <p>
+            <strong>Total: $<span id="total">0.00</span></strong>
+          </p>
+          <input
+            type="text"
+            id="couponInput"
+            placeholder="Enter coupon code..."
+          />
+          <button onclick="applyCoupon()">Apply Coupon</button>
+          <p id="couponMsg"></p>
+          <button class="checkout-btn" onclick="checkout()">Checkout</button>
+        </div>
       </div>
     </div>
-  </div>
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>

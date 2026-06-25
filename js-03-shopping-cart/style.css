@@ -26,3 +26,13 @@ main { padding: 24px; }
 .cart-summary button { padding: 8px 16px; background: #0984e3; color: white; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 8px; }
 .checkout-btn { width: 100%; padding: 12px; background: #00b894 !important; font-size: 16px; margin-top: 10px; }
 #couponMsg { font-size: 13px; color: green; }
+
+
+.toggleHeading{
+    display: flex;
+    justify-content: space-between;
+}
+.crossIcon{
+    font-size: 20px;
+    cursor: pointer;
+}
