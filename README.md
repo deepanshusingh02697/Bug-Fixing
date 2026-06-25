@@ -12,3 +12,8 @@
 2. Handle quantity update, quantity neither be less than 1 in cart and nor be greater than the quantity available in stock.
 3. Cart make empty once user placed or checkout order.
 
+## Project2 : Weather-widget
+1. Correct name of the key in localstorage to get and set the value in localstroage, should same to access and set the value
+2. avoid duplicate city to render or add in localstroage
+3. Empty the input field once searched the location of weather
+4. Remove recent history by enabling clearhistory and also remove the card from of the deatails of the weather for the recent searched location.
