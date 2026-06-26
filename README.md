@@ -40,3 +40,9 @@
 1. mockAuth midleware, verify the auth by maintaing userid should <=2 and >=1
 2. In getNotesForUser, resolve should be inside the setTimeout because this is the asynchronous operation and take time to resolve and result is depen on the setTimeout so it will be used inside otherwise synchronous taks will execte first and giev undeinded for the getNotesForUser.
 3. change the api point from /notes/search to /notes1/search becuase it will hit the same api which starts from the /notes for same methods.
+
+
+## Project react-01: user-dashboard
+1. add array dependency so that when search it will not rerender at every character 
+2. replace Math.round with Math.ceil due to which filter will work correctly by available page number
+3. add statusFilter in array dependency so that component will render and fetch through filter
