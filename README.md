@@ -27,3 +27,16 @@
 5. error middelware is present but never used so used in catch block by the use of next keyword
 6. In GET /products/stats, the route should not be start with /products becuase to get the product detail already used so it will search in that and will not hit that api so change the name of starting point of the api for same http methodl due to app.get.
 7. process.env.PORT used but never used so create .env file and used this by defining at the top of the code.
+
+
+## Project node-02: auth-System
+1. Dotenv avilable but never used
+2. Remove the immdediate authentication during the registration- user first verify during login then generate token
+3. add token expiration time in jwt.sign so that the token will not be forever.
+4. Email validation is not correct like accept s@gmal so correct the email validation using regex
+
+
+## Project node-03: notes-api
+1. mockAuth midleware, verify the auth by maintaing userid should <=2 and >=1
+2. In getNotesForUser, resolve should be inside the setTimeout because this is the asynchronous operation and take time to resolve and result is depen on the setTimeout so it will be used inside otherwise synchronous taks will execte first and giev undeinded for the getNotesForUser.
+3. change the api point from /notes/search to /notes1/search becuase it will hit the same api which starts from the /notes for same methods.
