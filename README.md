@@ -17,3 +17,13 @@
 2. avoid duplicate city to render or add in localstroage
 3. Empty the input field once searched the location of weather
 4. Remove recent history by enabling clearhistory and also remove the card from of the deatails of the weather for the recent searched location.
+
+
+## Project node-01: products-api
+1. In GET /products/:id convert the params id type into number 
+2. To parse the data for post,put,patch use the middleware express.json()
+3. In PUT /products/:id, convert the params id type into number 
+4. when product update some fields of product then other fields should be remaing which are not update
+5. error middelware is present but never used so used in catch block by the use of next keyword
+6. In GET /products/stats, the route should not be start with /products becuase to get the product detail already used so it will search in that and will not hit that api so change the name of starting point of the api for same http methodl due to app.get.
+7. process.env.PORT used but never used so create .env file and used this by defining at the top of the code.
