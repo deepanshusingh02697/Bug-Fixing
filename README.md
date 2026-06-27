@@ -46,3 +46,24 @@
 1. add array dependency so that when search it will not rerender at every character 
 2. replace Math.round with Math.ceil due to which filter will work correctly by available page number
 3. add statusFilter in array dependency so that component will render and fetch through filter
+
+
+## Project react-02: quiz-app
+1. there is no suggestion or button to start the quiz its start immediately so applied a button which indicates that user have to first start.
+2. Correct the logic for time per question i.e time counter for per question
+3. Correct the logic for count the correct answer and make sure to give correct answer
+4. correct the UI logic for success green color and for wrong answer give red color.
+5. once user finish the quiz then remove the previous quiz reult over the result UI.
+
+
+## Project react-03: blog-app
+1. when user write post there is a issue to include the state of title into the content in value so correct via add content in value.
+2. when add comment then the date is in the string format and it will take the string so i format the date via .toLocalDateStering("en-In",{}).
+3. show the count of like at current time over the home page of post.
+4. when user visit post detail and like the post, the count is increasing only when like via same machine so correct it via take a state and handle like now behaves as like or dislike functionalit.
+
+
+##  Project react-04: expence-tracker
+1. Add array depencies in the useEffect it is re-render again and again so add array dependencies and parse transaction state on it when transaction state change then rerender
+2. when add amount its taking integer amount and so parse into float amount can be float
+3. total income is calculated via expencsed so it should be calculated via income.

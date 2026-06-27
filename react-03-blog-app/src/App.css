@@ -1,0 +1,252 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Georgia, serif;
+  background: #fafafa;
+  color: #222;
+}
+header {
+  background: #1a1a1a;
+  color: white;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header h1 {
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+header nav button {
+  background: none;
+  border: 1px solid white;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 14px;
+}
+header nav button.active {
+  background: white;
+  color: #1a1a1a;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+.post-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.post-card:hover {
+  transform: translateY(-3px);
+}
+.post-card-img {
+  height: 160px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px;
+}
+.post-card-body {
+  padding: 16px;
+}
+.post-card-body h2 {
+  font-size: 17px;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+.post-card-body p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #888;
+}
+.tag {
+  display: inline-block;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  color: #555;
+  margin-right: 4px;
+}
+.post-detail {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.post-detail h1 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.post-detail .meta {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.post-detail .content {
+  line-height: 1.8;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 32px;
+}
+.comments {
+  border-top: 2px solid #eee;
+  padding-top: 24px;
+}
+.comments h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+.comment {
+  background: white;
+  border-radius: 6px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.comment .author {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.comment .text {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+.comment .date {
+  font-size: 12px;
+  color: #aaa;
+}
+.comment-form {
+  margin-top: 20px;
+}
+.comment-form input,
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-family: inherit;
+}
+.comment-form textarea {
+  height: 100px;
+  resize: vertical;
+}
+.comment-form button {
+  padding: 10px 24px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.likes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.likes button {
+  padding: 8px 18px;
+  border: 2px solid #1a1a1a;
+  background: white;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+.likes button.liked {
+  background: #1a1a1a;
+  color: white;
+}
+.back-btn {
+  margin-bottom: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #667eea;
+  font-size: 14px;
+  font-family: inherit;
+}
+.form-page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.form-page h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+.form-page label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #333;
+}
+.form-page input,
+.form-page textarea,
+.form-page select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-family: inherit;
+}
+.form-page textarea {
+  height: 180px;
+  resize: vertical;
+}
+.form-page button {
+  padding: 12px 28px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin-top: -12px;
+  margin-bottom: 10px;
+}
+.search-bar {
+  margin-bottom: 24px;
+}
+.search-bar input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+}
