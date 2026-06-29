@@ -1,5 +1,7 @@
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
 let currentFilter = "all";
+let lefttodos = todos;
+let editId = null;
 
 function getNextId() {
   return todos.length + 1;
@@ -20,22 +22,37 @@ function addTodo() {
     return;
   }
 
-  const todo = {
-    id: getNextId(),
-    text: text,
-    completed: false,
-    dueDate: dueDateInput.value || null,
-  };
+  if (dueDateInput.value && new Date(dueDateInput.value) < Date.now()) {
+    alert("date should be of future");
+    return;
+  }
+  if (editId !== null) {
+    todos[editId].text = document.getElementById("todoInput").value;
+    todos[editId].dueDate = document.getElementById("dueDateInput").value;
+    saveTodos();
+    document.getElementById("todoInput").value="";
+    document.getElementById("dueDateInput").value="";
+    renderTodos();
+    return;
+  } else {
+    const todo = {
+      id: getNextId(),
+      text: text,
+      completed: false,
+      dueDate: dueDateInput.value || null,
+    };
+    todos.push(todo);
+    saveTodos();
+  }
 
-  todos.push(todo);
-  saveTodos();
+  
   input.value = "";
   dueDateInput.value = "";
   renderTodos();
 }
 
 function toggleTodo(idx) {
-  const todo = todos.find((t,id) => idx === id);
+  const todo = todos.find((t, id) => idx === id);
   if (todo) {
     if (todo.completed === false) {
       todo.completed = true;
@@ -53,9 +70,16 @@ function deleteTodo(id) {
   renderTodos();
 }
 
+function editTodo(id) {
+  console.log(id);
+  editId = id;
+  const todo = todos.filter((cur, idx) => idx === id);
+  document.getElementById("todoInput").value = todo[0].text;
+  document.getElementById("dueDateInput").value = todo[0].dueDate;
+}
+
 function filterTodos(filter) {
   currentFilter = filter;
-  console.log("currentFilter ", currentFilter);
 
   if (currentFilter === "active") {
     todos = todos.filter((cur, id) => {
@@ -68,24 +92,22 @@ function filterTodos(filter) {
   } else {
     todos = todos.filter((cur) => cur);
   }
-  renderTodos()
+  renderTodos();
   todos = JSON.parse(localStorage.getItem("todos"));
 }
 
 function clearCompleted() {
   todos = todos.filter((t) => !t.completed);
   saveTodos();
-  renderTodos()
+  renderTodos();
 }
-
 function updateCount() {
+  lefttodos = todos.filter((cur) => cur.completed === false);
   const countEl = document.getElementById("itemCount");
-  countEl.textContent = `${todos.length} items left`;
+  countEl.textContent = `${lefttodos.length} items left`;
 }
 
 function isOverdue(dateStr) {
-  console.log("date in overdue : ",dateStr);
-  
   if (!dateStr) return false;
   const due = new Date(dateStr);
   const today = new Date();
@@ -126,6 +148,11 @@ function renderTodos() {
       }
     }
 
+    const editBtn = document.createElement("button");
+    editBtn.className = "edit-btn";
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => editTodo(idx));
+
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "delete-btn";
     deleteBtn.textContent = "Delete";
@@ -134,6 +161,7 @@ function renderTodos() {
     li.appendChild(checkbox);
     li.appendChild(textSpan);
     li.appendChild(dueDateSpan);
+    li.appendChild(editBtn);
     li.appendChild(deleteBtn);
     list.appendChild(li);
   });

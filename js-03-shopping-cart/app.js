@@ -1,9 +1,39 @@
 const products = [
-  { id: 1, name: "Wireless Headphones", price: 59.99, stock: 5,image:"https://picsum.photos/seed/headphones/200/300" },
-  { id: 2, name: "Mechanical Keyboard", price: 89.99, stock: 3, image:"https://picsum.photos/seed/keyboard/200/300" },
-  { id: 3, name: "USB-C Hub", price: "29.99", stock: 8, image:"https://picsum.photos/seed/usbhub/200/300" },
-  { id: 4, name: "Webcam HD", price: 49.99, stock: 2, image:"https://picsum.photos/seed/webcam/200/300" },
-  { id: 5, name: "Desk Lamp", price: 34.99, stock: 0, image:"https://picsum.photos/seed/lamp/200/300" },
+  {
+    id: 1,
+    name: "Wireless Headphones",
+    price: 59.99,
+    stock: 5,
+    image: "https://picsum.photos/seed/headphones/200/300",
+  },
+  {
+    id: 2,
+    name: "Mechanical Keyboard",
+    price: 89.99,
+    stock: 3,
+    image: "https://picsum.photos/seed/keyboard/200/300",
+  },
+  {
+    id: 3,
+    name: "USB-C Hub",
+    price: 29.99,
+    stock: 8,
+    image: "https://picsum.photos/seed/usbhub/200/300",
+  },
+  {
+    id: 4,
+    name: "Webcam HD",
+    price: 49.99,
+    stock: 2,
+    image: "https://picsum.photos/seed/webcam/200/300",
+  },
+  {
+    id: 5,
+    name: "Desk Lamp",
+    price: 34.99,
+    stock: 0,
+    image: "https://picsum.photos/seed/lamp/200/300",
+  },
 ];
 
 let cart = [];
@@ -52,7 +82,7 @@ function renderCart() {
         <button onclick="updateQuantity(${item.id}, 1)">+</button>
       </div>
       <div class="item-total">$${(item.price * item.quantity).toFixed(2)}</div>
-      <button onclick="removeItem('${item.name}')" style="color:red;border:none;background:none;cursor:pointer;font-size:18px;">×</button>
+      <button onclick="removeItem('${item.id}')" style="color:red;border:none;background:none;cursor:pointer;font-size:18px;">×</button>
     `;
     container.appendChild(div);
   });
@@ -90,28 +120,40 @@ function updateQuantity(id, delta) {
   const filterProduct = products.filter((cur) => cur.id === id); //can't add item more than stock
 
   if (delta === 1) {
-    if (item.quantity !== -1 && item.quantity < filterProduct[0].stock) {
+    if (item.quantity !== 0 && item.quantity < filterProduct[0].stock) {
       item.quantity += delta;
-    }else{
-      alert(`You can add maximum ${filterProduct[0].stock} items for this product`)
+    } else {
+      alert(
+        `You can add maximum ${filterProduct[0].stock} items for this product`,
+      );
     }
   } else if (delta === -1) {
-    if (item.quantity !== 1) {
+    if (item.quantity > 1) {
       item.quantity += delta;
+    } else {
+      cart = cart.filter((c) => c.id !== id);
     }
   }
   renderCart();
 }
 
-function removeItem(name) {
-  cart = cart.filter((c) => c.name !== name);
+function removeItem(id) {
+  //!
+  cart = cart.filter((c) => c.id !== id);
   renderCart();
 }
 
 // ---- Totals ----
 
 function updateCartCount() {
-  document.getElementById("cartCount").textContent = cart.length;
+  // document.getElementById("cartCount").textContent = cart.length;
+  // console.log("cart count: ",cart);
+  
+  const totalQuantity = cart.reduce((acc,ele)=>{
+    return acc+ele.quantity
+  },0)
+  document.getElementById("cartCount").textContent = totalQuantity;
+
 }
 
 function calculateTotal() {
@@ -135,6 +177,11 @@ function applyCoupon() {
   const msg = document.getElementById("couponMsg");
 
   if (code === "SAVE20") {
+    if (couponApplied) {
+      msg.textContent = "Coupon already applied";
+      msg.style.color = "orange";
+      return;
+    }
     discountRate += 0.2;
     couponApplied = true;
     msg.textContent = "Coupon applied! Extra 20% off.";
@@ -155,8 +202,11 @@ function checkout() {
     return;
   }
   alert("Order placed successfully! Thank you for your purchase.");
-  cart=[];
-  renderCart()
+  cart = [];
+  couponApplied = false;
+  discountRate = 0.1;
+  document.getElementById("couponMsg").textContent = "";
+  renderCart();
 }
 
 // ---- Sidebar Toggle ----

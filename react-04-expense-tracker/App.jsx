@@ -25,18 +25,18 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('expenses', JSON.stringify(transactions));
-  }); 
+  },[transactions]); 
 
   const filtered = useMemo(() => {
     return transactions
       .filter(t => filterType === 'all' || t.type === filterType)
       .filter(t => filterCategory === 'all' || t.category === filterCategory)
       .filter(t => !filterMonth || t.date.startsWith(filterMonth))
-      .sort((a, b) => a.date.localeCompare(b.date));
+      .sort((a, b) => b.date.localeCompare(a.date));
   }, [transactions, filterType, filterCategory, filterMonth]);
 
   const totalIncome = transactions.reduce((sum, t) =>
-    t.type === 'expense' ? sum + t.amount : sum, 0); 
+    t.type === 'income' ? sum + t.amount : sum, 0); 
 
   const totalExpenses = transactions.reduce((sum, t) =>
     t.type === 'expense' ? sum + t.amount : sum, 0);
@@ -48,9 +48,10 @@ function App() {
   }
 
   function deleteTransaction(id) {
-    const idx = transactions.findIndex(t => t.id === id);
-    transactions.splice(idx, 1);
-    setTransactions([...transactions]);
+    // const idx = transactions.findIndex(t => t.id === id);
+    // transactions.splice(idx, 1);
+    // setTransactions([...transactions]);
+    setTransactions(prev=>prev.filter(t.id===id))
   }
 
   const categoryTotals = useMemo(() => {
@@ -140,7 +141,7 @@ function AddTransactionForm({ onAdd }) {
   function validate() {
     const errs = {};
     if (!desc.trim()) errs.desc = 'Description required.';
-    if (!amount) errs.amount = 'Amount required.';
+    if (!amount || Number(amount)) errs.amount = 'Amount must required greater than 0';
     if (isNaN(Number(amount))) errs.amount = 'Must be a number.';
     if (!date) errs.date = 'Date required.';
     return errs;
@@ -155,7 +156,7 @@ function AddTransactionForm({ onAdd }) {
     onAdd({
       id: Date.now(),
       description: desc.trim(),
-      amount: parseInt(amount),
+      amount: parseFloat(amount),
       type,
       category,
       date,

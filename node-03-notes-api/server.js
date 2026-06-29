@@ -69,14 +69,14 @@ let notes = [
 let nextId = 7;
 
 async function getNotesForUser(userId) {
-  console.log("get id : ",userId);
-  
+  console.log("get id : ", userId);
+
   return await new Promise((resolve) => {
     let result;
     setTimeout(() => {
       result = notes.filter((n) => n._userId === userId);
-      resolve(result);//!
-    }, 10); 
+      resolve(result); //!
+    }, 10);
   });
 }
 
@@ -90,21 +90,22 @@ function mockAuth(req, res, next) {
     return res
       .status(401)
       .json({ error: "X-User-Id header required for this demo" });
-  if(userId<1 || userId>2){//!
-    return res.status(401).json({ error: "Invalid credentials"})
+  if (userId < 1 || userId > 2) {
+    return res.status(401).json({ error: "Invalid credentials" });
   }
   req.userId = userId;
   next();
 }
 
-app.get("/notes", mockAuth, async(req, res) => {
+app.get("/notes", mockAuth, async (req, res) => {
   const { search, tag, pinned, page = 1, limit = 3 } = req.query;
 
   let userNotes = await getNotesForUser(req.userId);
 
+  const s=search.toLowerCase()
   if (search) {
     userNotes = userNotes.filter(
-      (n) => n.title.includes(search) || n.body.includes(search),
+      (n) => n.title.toLowerCase().includes(s) || n.body.toLowerCase().includes(s),
     );
   }
 
@@ -128,13 +129,6 @@ app.get("/notes", mockAuth, async(req, res) => {
     data: paginated,
   });
 });
-
-app.get("/notes/:id", mockAuth, async (req, res) => {
-  const note = await getNoteById(Number(req.params.id));
-  if (!note) return res.status(404).json({ error: "Note not found" });
-  res.json(note);
-});
-
 app.post("/notes", mockAuth, async (req, res) => {
   const { title, body, tags, pinned } = req.body;
 
@@ -169,9 +163,38 @@ app.post("/notes", mockAuth, async (req, res) => {
   res.status(201).json(newNote);
 });
 
+app.get("/notes/:id", mockAuth, async (req, res) => {
+  const note = await getNoteById(Number(req.params.id));
+  if (!note) return res.status(404).json({ error: "Note not found" });
+  if (note._userId !== req.userId) {
+    return res
+      .status(403)
+      .json({ error: "authenticated but not authorised to access note" });
+  }
+  res.json(note);
+});
+
+app.get("/notes/search", mockAuth, (req, res) => {
+  // const {search} = req.query
+  // console.log(search);
+
+  // if (search) {
+  //   userNotes = userNotes.filter(
+  //     (n) => n.title.includes(search) || n.body.includes(search),
+  //   );
+  // }
+  res.json({ message: "Search endpoint" });
+});
+
 app.put("/notes/:id", mockAuth, async (req, res) => {
   const note = await getNoteById(Number(req.params.id));
   if (!note) return res.status(404).json({ error: "Note not found" });
+
+  if (note._userId !== req.userId) {
+    return res
+      .status(403)
+      .json({ error: "authenticated but not authorised to access note" });
+  }
 
   const { title, body, tags, pinned } = req.body;
 
@@ -191,21 +214,9 @@ app.delete("/notes/:id", mockAuth, async (req, res) => {
   if (notes[index]._userId !== req.userId) {
     return res.status(403).json({ error: "Forbidden" });
   }
-  
-  notes.splice(index, 1);
-  res.status(200).json({ message: "Note deleted",notes });
-});
 
-app.get("/notes1/search", mockAuth, (req, res) => {
-  // const {search} = req.query
-  // console.log(search);
-  
-  // if (search) {
-  //   userNotes = userNotes.filter(
-  //     (n) => n.title.includes(search) || n.body.includes(search),
-  //   );
-  // }
-  res.json({ message: "Search endpoint" });
+  const deletedNote = notes.splice(index, 1); //!
+  res.status(200).json({ message: "Note deleted", deletedNote });
 });
 
 const PORT = process.env.PORT || 3002;

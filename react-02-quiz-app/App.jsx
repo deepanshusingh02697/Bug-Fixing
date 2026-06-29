@@ -103,7 +103,7 @@ function QuizApp() {
 
     const isCorrect = optionIndex === QUESTIONS[currentQ].correct;
 
-    if (!isCorrect) {
+    if (isCorrect) {
       setScore(prev => prev + 1);
     }
 
@@ -120,6 +120,7 @@ function QuizApp() {
     }
     setCurrentQ(prev => prev + 1);
     setSelectedAnswer(null);
+    setAnswered(false)
     setTimeLeft(TIME_PER_QUESTION);
   }
 
@@ -130,6 +131,7 @@ function QuizApp() {
     setScore(0);
     setTimeLeft(TIME_PER_QUESTION);
     setQuizDone(false);
+    setUserAnswers([])
   }
 
   if (quizDone) {
@@ -145,7 +147,7 @@ function QuizApp() {
           <div className="review-list">
             <h3 style={{marginBottom:'12px',marginTop:'20px'}}>Review</h3>
             {userAnswers.map((ans, i) => (
-              <div key={i} className={`review-item ${ans.correct ? 'wrong-ans' : 'correct-ans'}`}>
+              <div key={i} className={`review-item ${ans.correct ?'correct-ans': 'wrong-ans'}`}>
                 <strong>Q{i+1}:</strong> {ans.question.question}<br/>
                 <span>Your answer: {ans.selected !== null ? ans.question.options[ans.selected] : 'Timed out'}</span><br/>
                 <span>Correct: {ans.question.options[ans.question.correct]}</span>
@@ -183,7 +185,7 @@ function QuizApp() {
             <button
               key={i}
               className={cls}
-              onClick={() => handleAnswer(i)}
+              onClick={() =>handleAnswer(i)}
             >
               {opt}
             </button>

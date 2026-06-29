@@ -127,7 +127,8 @@ function UserTable({ users }) {
             <td>{user.role}</td>
             <td>
               <span
-                className={`badge ${user.status === "active" ? "inactive" : user.status === "inactive" ? "active" : "pending"}`}
+                /* className={`badge ${user.status === "active" ? "inactive" : user.status === "inactive" ? "active" : "pending"}`} */
+                className={`badge ${user.status}`}
               >
                 {user.status}
               </span>
@@ -161,22 +162,22 @@ function Dashboard() {
         setLoading(false);
       }
     }, 800);
-  });
+  },[]);//!
   const totalRevenue = users.reduce((s, u) => s + u.revenue, 0);
   const activeUsers = users.filter((u) => u.status === "active").length;
-  const avgRevenue = totalRevenue / users.length; // NaN when users=[]
+  const avgRevenue = users.length>0?totalRevenue / users.length:0; //!
 
   const filtered = users.filter((user) => {
     const matchesSearch =
       search === "" ||
       user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email == search;
+      user.email.includes(search);//!
     const matchesStatus =
       statusFilter === "all" || user.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  const totalPages = Math.round(filtered.length / PAGE_SIZE);
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
 
   const paginated = filtered.slice(
     (currentPage - 1) * PAGE_SIZE,
@@ -185,6 +186,7 @@ function Dashboard() {
 
   function handleSearchChange(e) {
     setSearch(e.target.value);
+    setCurrentPage(1)//!
   }
 
   function handleStatusChange(e) {

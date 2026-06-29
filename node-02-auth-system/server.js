@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-const JWT_SECRET = "supersecret123";
+// const JWT_SECRET = "supersecret123";
 
 const users = [
   {
@@ -28,7 +28,7 @@ function isValidEmail(email) {
 }
 
 function generateToken(userId) {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" }); 
+  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" }); 
 }
 
 function authMiddleware(req, res, next) {
@@ -39,7 +39,7 @@ function authMiddleware(req, res, next) {
 
   const token = authHeader.split(" ")[1];
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = users.find((u) => u.id === decoded.userId);
     if (!user) return res.status(401).json({ error: "User not found" });
 
@@ -65,6 +65,11 @@ app.post("/register", async (req, res) => {
 
     if (!isValidEmail(email)) {//!
       return res.status(400).json({ error: "Invalid email address" });
+    }
+
+    const existingEmail = users.find(u=>u.email===email.toLowerCase())
+    if(existingEmail){
+      return res.status(400).json({error:"Email already exist"})
     }
 
     if (password.length < 8) {
@@ -108,7 +113,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Email not found" });
     }
 
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ error: "Incorrect password" });
@@ -131,7 +136,8 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/me", authMiddleware, (req, res) => {
-  res.json({ user: req.user });
+  const {password, ...safeUser} = req.user
+  res.json({ user: safeUser });
 });
 
 // PUT /me — update profile
@@ -150,7 +156,7 @@ app.put("/me", authMiddleware, async (req, res) => {
     const valid = await bcrypt.compare(currentPassword, user.password);
     if (!valid)
       return res.status(401).json({ error: "Current password is wrong" });
-    user.password = await bcrypt.hash(newPassword, 1);
+    user.password = await bcrypt.hash(newPassword, 10);
   }
 
   const { password, ...safeUser } = user;

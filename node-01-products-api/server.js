@@ -98,12 +98,25 @@ app.post("/products", (req, res, next) => {
     };
 
     products.push(newProduct);
-    res.status(200).json({ newProduct, products });
+    res.status(201).json({ newProduct, products });
   } catch (error) {
     next(error);
   }
 });
-
+app.get("/products/stats", (req, res, next) => {
+  const total = products.length;
+  console.log(total);
+  try {
+    const totalValue = products.reduce((sum, p) => sum + p.price * p.stock, 0);
+    const avgPrice =
+      total > 0 ? products.reduce((s, p) => s + p.price, 0) / total : 0;
+    const categories = [...new Set(products.map((p) => p.category))];
+    res.json({ total, totalValue, avgPrice, categories });
+  } catch (error) {
+    console.log(error)
+    next(error);
+  }
+});
 app.put("/products/:id", (req, res, next) => {
   const product = products.find((p) => p.id === Number(req.params.id));
   if (!product) {
@@ -140,20 +153,7 @@ app.delete("/products/:id", (req, res, next) => {
   }
 });
 
-app.get("/products1/stats", (req, res, next) => {
-  const total = products.length;
-  console.log(total);
-  try {
-    const totalValue = products.reduce((sum, p) => sum + p.price * p.stock, 0);
-    const avgPrice =
-      total > 0 ? products.reduce((s, p) => s + p.price, 0) / total : 0;
-    const categories = [...new Set(products.map((p) => p.category))];
-    res.json({ total, totalValue, avgPrice, categories });
-  } catch (error) {
-    console.log(error)
-    next(error);
-  }
-});
+
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
