@@ -57,9 +57,13 @@ function App() {
   const [view, setView] = useState("list"); // 'list' | 'detail' | 'create'
   const [search, setSearch] = useState("");
 
-  const filteredPosts = posts.filter(
-    (p) => p.title.toLowerCase().includes(search.toLowerCase()) || p.excerpt.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredPosts = useMemo(() => {
+    return posts.filter(
+      (p) =>
+        p.title.toLowerCase().includes(search.toLowerCase()) ||
+        p.excerpt.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [posts, search]);
 
   function openPost(post) {
     setSelectedPost(post);
@@ -168,6 +172,7 @@ function App() {
           <PostDetail
             post={selectedPost}
             onBack={() => {
+              setSelectedPost(null);
               setView("list");
             }}
             onLike={handleLike}
@@ -186,7 +191,7 @@ function PostDetail({ post, onBack, onLike, onAddComment }) {
 
   function submitComment(e) {
     e.preventDefault();
-    if (!name.trim() || !text.trim()) return
+    if (!name.trim() || !text.trim()) return;
     const comment = {
       id: Date.now(),
       author: name,
@@ -274,11 +279,11 @@ function CreatePost({ onSubmit }) {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
-    const tags = tagInput.split(",").filter((t) => t.length > 0);
+    const tags = tagInput.split(",").map((t) => t.trim()).filter((t) => t.length > 0);
 
     const newPost = {
       // id: Math.random(),
-      id:Date.now(),
+      id: Date.now(),
       title,
       content: content,
       excerpt: content.substring(0, 100) + "...",

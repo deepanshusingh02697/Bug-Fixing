@@ -157,10 +157,10 @@ function updateCartCount() {
 }
 
 function calculateTotal() {
-  const subtotal = cart.reduce(
+  const subtotal = Math.round(cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
-  );
+  ))
 
   const discount = subtotal * discountRate;
   const total = subtotal - discount;
@@ -176,7 +176,7 @@ function applyCoupon() {
   const code = document.getElementById("couponInput").value;
   const msg = document.getElementById("couponMsg");
 
-  if (code === "SAVE20") {
+  if (code.toLowerCase() === "SAVE20".toLowerCase()) {
     if (couponApplied) {
       msg.textContent = "Coupon already applied";
       msg.style.color = "orange";

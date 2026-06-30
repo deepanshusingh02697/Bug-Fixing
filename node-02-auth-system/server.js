@@ -42,8 +42,8 @@ function authMiddleware(req, res, next) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = users.find((u) => u.id === decoded.userId);
     if (!user) return res.status(401).json({ error: "User not found" });
-
-    req.user = user;
+    const {password, ...safeUser}=user
+    req.user = safeUser;
     next();
   } catch (err) {
     return res.status(401).json({ error: "Invalid or expired token" });

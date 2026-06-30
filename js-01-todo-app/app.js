@@ -4,7 +4,8 @@ let lefttodos = todos;
 let editId = null;
 
 function getNextId() {
-  return todos.length + 1;
+  // return todos.length + 1;
+  return Date.now()
 }
 
 function saveTodos() {
@@ -15,7 +16,7 @@ function addTodo() {
   const input = document.getElementById("todoInput");
   const dueDateInput = document.getElementById("dueDateInput");
 
-  const text = input.value;
+  const text = input.value.trim();
 
   if (!text) {
     alert("Please enter a todo item.");
@@ -27,8 +28,8 @@ function addTodo() {
     return;
   }
   if (editId !== null) {
-    todos[editId].text = document.getElementById("todoInput").value;
-    todos[editId].dueDate = document.getElementById("dueDateInput").value;
+    todos[editId].text = document.getElementById("todoInput").value.trim()
+    todos[editId].dueDate = document.getElementById("dueDateInput").value.trim()
     saveTodos();
     document.getElementById("todoInput").value="";
     document.getElementById("dueDateInput").value="";
@@ -39,7 +40,7 @@ function addTodo() {
       id: getNextId(),
       text: text,
       completed: false,
-      dueDate: dueDateInput.value || null,
+      dueDate: dueDateInput.value.trim() || null,
     };
     todos.push(todo);
     saveTodos();
@@ -112,7 +113,7 @@ function isOverdue(dateStr) {
   const due = new Date(dateStr);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return due >= today;
+  return due > today;
 }
 
 function renderTodos() {

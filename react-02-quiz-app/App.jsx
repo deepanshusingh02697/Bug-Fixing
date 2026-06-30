@@ -21,7 +21,12 @@ const QUESTIONS = [
   {
     id: 3,
     question: "Which method is used to render a React app to the DOM?",
-    options: ["React.render()", "ReactDOM.createRoot().render()", "document.render()", "ReactDOM.mount()"],
+    options: [
+      "React.render()",
+      "ReactDOM.createRoot().render()",
+      "document.render()",
+      "ReactDOM.mount()",
+    ],
     correct: 1,
   },
   {
@@ -43,7 +48,8 @@ const QUESTIONS = [
   },
   {
     id: 6,
-    question: "Which array method returns a new array without mutating the original?",
+    question:
+      "Which array method returns a new array without mutating the original?",
     options: ["push()", "splice()", "sort()", "map()"],
     correct: 3,
   },
@@ -75,28 +81,33 @@ function QuizApp() {
 
   useEffect(() => {
     if (answered || quizDone) return;
-
+    clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
-        const next = prev + 1;
-        if (next >= TIME_PER_QUESTION) {
+      setTimeLeft((prev) => {
+        const next = prev - 1;
+        if (next <= 0) {
           clearInterval(timerRef.current);
           handleTimeout();
-          return TIME_PER_QUESTION;
+          return 0;
         }
+
         return next;
       });
     }, 1000);
 
     return () => clearInterval(timerRef.current);
-  }, [currentQ, answered]);
+  }, [currentQ, answered, quizDone]);
 
   function handleTimeout() {
     setAnswered(true);
-    setUserAnswers(prev => [...prev, { question: QUESTIONS[currentQ], selected: null, correct: false }]);
+    setUserAnswers((prev) => [
+      ...prev,
+      { question: QUESTIONS[currentQ], selected: null, correct: false },
+    ]);
   }
 
   function handleAnswer(optionIndex) {
+    if (answered) return;
     setSelectedAnswer(optionIndex);
     setAnswered(true);
     clearInterval(timerRef.current);
@@ -104,12 +115,16 @@ function QuizApp() {
     const isCorrect = optionIndex === QUESTIONS[currentQ].correct;
 
     if (isCorrect) {
-      setScore(prev => prev + 1);
+      setScore((prev) => prev + 1);
     }
 
-    setUserAnswers(prev => [
+    setUserAnswers((prev) => [
       ...prev,
-      { question: QUESTIONS[currentQ], selected: optionIndex, correct: isCorrect },
+      {
+        question: QUESTIONS[currentQ],
+        selected: optionIndex,
+        correct: isCorrect,
+      },
     ]);
   }
 
@@ -118,9 +133,9 @@ function QuizApp() {
       setQuizDone(true);
       return;
     }
-    setCurrentQ(prev => prev + 1);
+    setCurrentQ((prev) => prev + 1);
     setSelectedAnswer(null);
-    setAnswered(false)
+    setAnswered(false);
     setTimeLeft(TIME_PER_QUESTION);
   }
 
@@ -131,26 +146,45 @@ function QuizApp() {
     setScore(0);
     setTimeLeft(TIME_PER_QUESTION);
     setQuizDone(false);
-    setUserAnswers([])
+    setUserAnswers([]);
   }
 
   if (quizDone) {
-    const percentage = Math.floor((score / QUESTIONS.length) * 100);
+    const percentage = Math.round((score / QUESTIONS.length) * 100);
 
     return (
       <div className="quiz-container">
         <div className="result-screen">
           <h2>Quiz Complete!</h2>
-          <div className="score-circle">{score}/{QUESTIONS.length}</div>
-          <p>You scored {percentage}% — {percentage >= 70 ? 'Great job! 🎉' : 'Keep practicing!'}</p>
-          <button className="btn btn-primary" onClick={restartQuiz}>Restart Quiz</button>
+          <div className="score-circle">
+            {score}/{QUESTIONS.length}
+          </div>
+          <p>
+            You scored {percentage}% —{" "}
+            {percentage >= 70 ? "Great job! 🎉" : "Keep practicing!"}
+          </p>
+          <button className="btn btn-primary" onClick={restartQuiz}>
+            Restart Quiz
+          </button>
           <div className="review-list">
-            <h3 style={{marginBottom:'12px',marginTop:'20px'}}>Review</h3>
+            <h3 style={{ marginBottom: "12px", marginTop: "20px" }}>Review</h3>
             {userAnswers.map((ans, i) => (
-              <div key={i} className={`review-item ${ans.correct ?'correct-ans': 'wrong-ans'}`}>
-                <strong>Q{i+1}:</strong> {ans.question.question}<br/>
-                <span>Your answer: {ans.selected !== null ? ans.question.options[ans.selected] : 'Timed out'}</span><br/>
-                <span>Correct: {ans.question.options[ans.question.correct]}</span>
+              <div
+                key={i}
+                className={`review-item ${ans.correct ? "correct-ans" : "wrong-ans"}`}
+              >
+                <strong>Q{i + 1}:</strong> {ans.question.question}
+                <br />
+                <span>
+                  Your answer:{" "}
+                  {ans.selected !== null
+                    ? ans.question.options[ans.selected]
+                    : "Timed out"}
+                </span>
+                <br />
+                <span>
+                  Correct: {ans.question.options[ans.question.correct]}
+                </span>
               </div>
             ))}
           </div>
@@ -165,27 +199,33 @@ function QuizApp() {
   return (
     <div className="quiz-container">
       <div className="quiz-header">
-        <span className="question-num">Question {currentQ + 1} of {QUESTIONS.length}</span>
+        <span className="question-num">
+          Question {currentQ + 1} of {QUESTIONS.length}
+        </span>
         <span className="timer">⏱ {timeLeft}s</span>
       </div>
       <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${progressPct}%` }}></div>
+        <div
+          className="progress-fill"
+          style={{ width: `${progressPct}%` }}
+        ></div>
       </div>
       <div className="question-text">{question.question}</div>
       <div className="options">
         {question.options.map((opt, i) => {
-          let cls = 'option';
+          let cls = "option";
           if (answered) {
-            if (i === question.correct) cls += ' correct';
-            else if (i === selectedAnswer) cls += ' wrong';
+            if (i === question.correct) cls += " correct";
+            else if (i === selectedAnswer) cls += " wrong";
           } else if (i === selectedAnswer) {
-            cls += ' selected';
+            cls += " selected";
           }
           return (
             <button
               key={i}
               className={cls}
-              onClick={() =>handleAnswer(i)}
+              onClick={() => handleAnswer(i)}
+              disabled={answered}
             >
               {opt}
             </button>
@@ -197,11 +237,11 @@ function QuizApp() {
         onClick={nextQuestion}
         disabled={!answered}
       >
-        {currentQ + 1 === QUESTIONS.length ? 'See Results' : 'Next Question'}
+        {currentQ + 1 === QUESTIONS.length ? "See Results" : "Next Question"}
       </button>
     </div>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<QuizApp />);

@@ -84,7 +84,7 @@ function UserTable({ users }) {
   }
 
   function sortUsers(arr) {
-    return arr.sort((a, b) => {
+    return [...arr].sort((a, b) => {
       const valA = a[sortField];
       const valB = b[sortField];
       if (typeof valA === "string") {
@@ -121,7 +121,7 @@ function UserTable({ users }) {
       </thead>
       <tbody>
         {sorted.map((user, index) => (
-          <tr key={index}>
+          <tr key={user.id}>
             <td>{user.name}</td>
             <td>{user.email}</td>
             <td>{user.role}</td>
@@ -153,7 +153,7 @@ function Dashboard() {
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       try {
         setUsers(MOCK_USERS);
         setLoading(false);
@@ -162,6 +162,7 @@ function Dashboard() {
         setLoading(false);
       }
     }, 800);
+    return () => clearTimeout(timer);
   },[]);//!
   const totalRevenue = users.reduce((s, u) => s + u.revenue, 0);
   const activeUsers = users.filter((u) => u.status === "active").length;
@@ -191,6 +192,7 @@ function Dashboard() {
 
   function handleStatusChange(e) {
     setStatusFilter(e.target.value);
+    setCurrentPage(1)
   }
 
   if (loading) return <div className="loading">Loading dashboard...</div>;
